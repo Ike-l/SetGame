@@ -60,10 +60,6 @@ function setup() {
     findSetsBn.parent(rightSideDiv)
     findSetsBn.mousePressed(findSets)
 
-    const logCardsBn = createButton("Console Log Cards")
-    logCardsBn.parent(rightSideDiv)
-    logCardsBn.mousePressed(function() {console.log(cards)})
-
     const clearLog = createButton("Clear output")
     clearLog.parent(rightSideDiv)
     clearLog.mousePressed(clearOutput)
