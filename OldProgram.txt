@@ -1,0 +1,146 @@
+// https://www.youtube.com/watch?v=EkFX9jUJPKk
+
+using System;
+
+class Card {
+    public string Colour { get; set; }
+    public short Number { get; set; }
+    public string Shape { get; set; }
+    public string Shading { get; set; }
+}
+
+
+
+class FindSet {
+    public static List<Card[][]> findSets(short[][] values) {
+        List<Card[][]> sets = new List<Card[][]>();
+        List<short[][]> groupedValues = Convert.convertValuesArrayArrayToGroupedArrayArray(values, 12);
+
+        foreach (short[][] group in groupedValues) {
+            List<Card[]> set = new List<Card[]>();
+            for (int i = 0; i < group.Length; i++) {
+                for (int j = i+1; j < group.Length; j++) {
+                    for (int k = j+1; k < group.Length; k++) {
+                        bool isSet = true;
+                        for(int p = 0; p < 4; p++) {
+                            if((group[i][p] + group[j][p] + group[k][p]) % 3 != 0) {
+                                isSet = false;
+                                break;
+                            }
+                        }
+                        if(isSet) {
+                            Card[] cards = { Convert.groupToCard(group[i]), Convert.groupToCard(group[j]), Convert.groupToCard(group[k]) };
+                            set.Add(cards);
+                        }
+                    }
+                }
+            }
+            sets.Add(set.ToArray());
+        }
+        return sets;
+    }
+}
+
+
+class Convert {
+    static Dictionary<String, Int16> Colour = new Dictionary<string, short> { { "Purple", 0 }, { "Green", 1 }, { "Red", 2 } };
+    static Dictionary<Int16, Int16> Number = new Dictionary<short, short> { { 1, 0 }, { 2, 1 }, { 3, 2 } };
+    static Dictionary<String, Int16> Shape = new Dictionary<string, short> { { "Oval", 0 }, { "Squiggle", 1 }, { "Diamond", 2 } };
+    static Dictionary<String, Int16> Shading = new Dictionary<string, short> { { "Outlined", 0 }, { "Striped", 1 }, { "Solid", 2 } };
+
+    static Dictionary<Int16, String> ColourInverse = new Dictionary<short, string> { { 0, "Purple" }, { 1, "Green" }, { 2, "Red" } };
+    static Dictionary<Int16, Int16> NumberInverse = new Dictionary<short, short> { { 0, 1 }, { 1, 2 }, { 2, 3 } };
+    static Dictionary<Int16, String> ShapeInverse = new Dictionary<short, string> { { 0, "Oval" }, { 1, "Squiggle" }, { 2, "Diamond" } };
+    static Dictionary<Int16, String> ShadingInverse = new Dictionary<short, string> { { 0, "Outlined" }, { 1, "Striped" }, { 2, "Solid" } };
+    
+    public static Int16[][] convertCardArrayToValueArrayArray (Card[] cards) {
+        Int16[][] values = new Int16[cards.Length][];
+        for (Int16 i = 0; i < values.Length; i++) {
+            values[i] = convertCardToValueArray(cards[i]);
+        }
+        return values;
+    }
+
+    public static Card[] convertStringArrayToCardArray(String[] lines) {
+        Card[] cards = new Card[lines.Length];
+        for (Int16 i = 0; i < cards.Length; i++) {
+            string currentLine = lines[i];
+            string[] currentLineArray = currentLine.Split(", ");
+
+            string colour = currentLineArray[0];
+            Int16 number = Int16.Parse(currentLineArray[1]);
+            string shape = currentLineArray[2];
+            string shading = currentLineArray[3];
+
+            cards[i] = new Card{
+                Colour = colour,
+                Number = number,
+                Shape = shape,
+                Shading = shading
+                };
+        }
+        return cards;
+    }
+
+    public static List<short[][]> convertValuesArrayArrayToGroupedArrayArray(short[][] values, int groupSize) {
+    List<short[][]> groupedValues = new List<short[][]>();
+    for (int i = 0; i < values.Length; i += groupSize) {
+        List<short[]> currentGroup = new List<short[]>();
+        for (int j = i; j < Math.Min(i + groupSize, values.Length); j++) {
+            currentGroup.Add(values[j]);
+        }
+        if (currentGroup.Count == groupSize) {
+            groupedValues.Add(currentGroup.ToArray());
+        }
+    }
+    return groupedValues;
+    }
+
+    public static Card groupToCard(short[] values) {
+    return new Card {
+        Colour = ColourInverse[values[0]],
+        Number = NumberInverse[values[1]],
+        Shape = ShapeInverse[values[2]],
+        Shading = ShadingInverse[values[3]]
+    };
+}
+
+    static Int16[] convertCardToValueArray(Card card) { 
+        return new Int16[] {Colour[card.Colour], Number[card.Number], Shape[card.Shape], Shading[card.Shading]};
+    }
+}
+
+class FileHandling {
+    public static Card[] getCardArray() {
+        String[] cardsArray = FileHandlingCardAsStringArray();
+        Card[] cards = Convert.convertStringArrayToCardArray(cardsArray);
+        return cards;
+    }
+
+    static String[] FileHandlingCardAsStringArray() {
+        string[] lines = File.ReadAllLines("./Cards.txt");
+        return lines;
+    }
+    public static void output(List<Card[][]> sets) {
+        using (StreamWriter file = new StreamWriter(@"Sets.txt")){
+            foreach (Card[][] group in sets) {
+                foreach (Card[] set in group) {
+                    foreach (Card card in set) {
+                    file.WriteLine($"Colour: {card.Colour}, Number: {card.Number}, Shape: {card.Shape}, Shading: {card.Shading}");
+                    }
+                file.WriteLine();
+                }
+            file.WriteLine();
+            }
+        }
+    }
+}
+
+class Run {
+    static void Main() {
+        Card[] cards = FileHandling.getCardArray();
+        Int16[][] values = Convert.convertCardArrayToValueArrayArray(cards);
+        List<Card[][]> sets = FindSet.findSets(values);
+        FileHandling.output(sets);
+    }
+}

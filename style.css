@@ -1,0 +1,103 @@
+:root {
+  --black: #000000;
+  --red: #810d0d;
+  --white: #00e1ff;
+  --grey: #d1bdbd;
+}
+
+
+
+
+html {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+
+
+body {
+  background-color: var(--black);
+  color: var(--white);
+  display: grid;
+  grid-template: auto 1fr auto / auto 1fr auto;
+}
+
+
+body header {
+  padding: 2rem;
+  grid-column: 1 / 4;
+  border: 0.1rem solid var(--white);
+  background-color: var(--red);
+  color: var(--white);
+}
+
+
+body .left-side {
+  grid-column: 1 / 2;
+  border: 0.1rem solid var(--white);
+  display: flex;
+  flex-direction: column;
+  background-color: var(--black);
+}
+
+body .left-side Select {
+  flex-grow: 1;
+  margin-top: 10%;
+  margin-bottom: 10%;
+  background-color: var(--grey);
+  border: 0.1rem solid var(--white);
+}
+
+
+body .right-side {
+  grid-column: 3 / 3;
+  border: 0.1rem solid var(--white);
+  display: flex;
+  flex-direction: column;
+  background-color: var(--black);
+}
+
+body .right-side Button {
+  flex-grow: 1;
+  margin-top: 10%;
+  margin-bottom: 10%;
+  background-color: var(--grey);
+  border: 0.1rem solid var(--white);
+}
+
+
+body .main {
+  display: flex;
+  grid-column: 2 / 3;
+  border: 0.1rem solid var(--white);
+  background-color: var(--black);
+  height: 80vh;
+  overflow: auto;
+}
+
+body .main #output {
+  order: 2;
+  margin-left: auto;
+  width: 35%;
+  border: 1px solid var(--white);
+  background-color: var(--red);
+  color: var(--white);
+  overflow: auto;
+}
+body .main #output h2,
+body .main #output h3,
+body .main #output h4 {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+
+
+body footer {
+  grid-column: 1 / 4;
+  border: 0.1rem solid var(--white);
+  background-color: var(--red);
+  color: var(--white);
+}
+
