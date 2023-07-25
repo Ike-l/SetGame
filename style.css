@@ -14,6 +14,10 @@ html {
   overflow: hidden;
 }
 
+button, select {
+  min-width: 0px;
+  min-height: 0px; 
+}
 
 
 body {
@@ -78,16 +82,17 @@ body .main {
 
 body .main #output {
   order: 2;
-  margin-left: auto;
   width: 35%;
   border: 1px solid var(--white);
   background-color: var(--red);
   color: var(--white);
   overflow: auto;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
 }
-body .main #output h2,
-body .main #output h3,
-body .main #output h4 {
+
+body .main #output * {
+  margin-left: 1vh;
   margin-top: 0;
   margin-bottom: 0;
 }
@@ -100,4 +105,3 @@ body footer {
   background-color: var(--red);
   color: var(--white);
 }
-
